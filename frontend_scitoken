@@ -1,0 +1,27 @@
+#!/bin/sh
+#
+
+# Example invocation:
+#
+# $ scitokens-admin-create-token --lifetime 3600 --key_id 7b75 \
+#     --keyfile ~/tmp/chtc_keys/chtc.private.pem
+#     --issuer https://chtc.cs.wisc.edu sub=vofrontend \
+#     'scope=compute.read compute.modify compute.create compute.cancel' \
+#     'wlcg.ver=1.0' 'aud=https://wlcg.cern.ch/jwt/v1/any' "jti=$(uuidgen -r)"
+
+KID=6804
+KEYFILE=/etc/condor/scitokens.pem
+LIFETIME=43200
+
+AUD=${1?"AUD and SUB not specified"}
+SUB=${2?"SUB not specified"}
+
+# create the token, echo it to stdout
+exec scitokens-admin-create-token --lifetime $LIFETIME --key_id $KID \
+    --keyfile "$KEYFILE" \
+    --issuer https://scitokens.org/osg-connect \
+    sub="vofrontend-$SUB" \
+    'scope=compute.read compute.modify compute.create compute.cancel' \
+    'wlcg.ver=1.0' \
+    "aud=$AUD" \
+    "jti=$(uuidgen -r)"

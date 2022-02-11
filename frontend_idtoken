@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+
+KEY=flock.opensciencegrid.org
+
+ID=${1?"ID not specified"}
+
+AUTH='-authz READ -authz ADVERTISE_STARTD -authz ADVERTISE_MASTER'
+
+export _condor_SEC_PASSWORD_DIRECTORY=/etc/condor/passwords.d-gwms/
+export _condor_TRUST_DOMAIN=flock.opensciencegrid.org
+
+# create the token, echo it to stdout
+/usr/bin/condor_token_create  -lifetime 86400 -key ${KEY} ${AUTH} -identity "gwms-${ID}@ospool.osg-htc.org"
